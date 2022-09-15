@@ -1,38 +1,50 @@
-# create-svelte
+# reproduction sveltekit issues [#6800](https://github.com/sveltejs/kit/issues/6800)
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+routes/[whatever]/+server.ts
+```js
+import type { RequestHandler } from './$types';
+let counter = 0;
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+export const GET: RequestHandler = ({ params }) => {
+	counter++;
+	console.log(params.whatever);
+	return new Response(`count: ${counter}`);
+};
 ```
 
-## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
+npm i
 npm run dev -- --open
+visiti: http://localhost:5173/WHATEVER repeatedly
 ```
 
-## Building
-
-To create a production version of your app:
-
+output: 
 ```bash
-npm run build
+count: 1
+count: 3
+count: 5
+count: 7
+```
+console.log
+```bash
+WHATEVER
+favicon.ico
+WHATEVER
+favicon.ico
+WHATEVER
+favicon.ico
+WHATEVER
+favicon.ico
 ```
 
-You can preview the production build with `npm run preview`.
+as this [comment](https://github.com/sveltejs/kit/issues/6800#issuecomment-1248064392) suggests, `favicon.ico` is the cause of repeated requests.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+
+---
+windows 11 Verison 21h2
+
+Chrome Versión 105.0.5195.102
+
+node v18
